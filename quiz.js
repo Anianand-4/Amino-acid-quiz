@@ -1,104 +1,102 @@
-// === Single best-match amino acid quiz ===
+// === Single best-match amino acid quiz (disguised questions) ===
 // Strategy: 10 questions -> property votes -> score each of 20 AAs by property overlap.
-// Rarer properties get higher weights. Ties broken by stronger match on rare tags, then alphabetically.
+// Rarer properties get higher weights. Ties broken by rarer-tag strength, then alphabetically.
 
-// ---------------------- Question Set ----------------------
+// ---------------------- Question Set (disguised) ----------------------
 const QUESTIONS = [
   {
-    q: "In a team, what do you naturally optimize for?",
+    q: "When you join a new team, what role do you naturally take on?",
     opts: [
-      { t: "charge+", label: "Momentum & activation (catalyze decisions)" },
-      { t: "polar",   label: "Communication & connectivity (H-bonding vibe)" },
-      { t: "hydroph", label: "Stability & structure (quiet core strength)" },
-      { t: "special", label: "Turning points & flexibility (quirky roles)" }
+      { t: "charge+", label: "I bring energy and momentum to get things moving." },
+      { t: "polar",   label: "I focus on connecting people and building bridges." },
+      { t: "hydroph", label: "I provide steady reliability in the background." },
+      { t: "special", label: "I add a spark of unpredictability that keeps things interesting." }
     ]
   },
   {
-    q: "Pick your operating environment:",
+    q: "Which environment do you feel most at home in?",
     opts: [
-      { t: "surface", label: "High-exposure interface (solvent-facing)" },
-      { t: "core",    label: "Buried core (low noise, high focus)" },
-      { t: "membrane",label: "Interfaces/edges (amphipathic balance)" },
-      { t: "loop",    label: "Loops/turns (dynamic, adaptable)" }
+      { t: "surface",  label: "Out in the open where everything’s happening." },
+      { t: "core",     label: "Deep in the core where I can focus without distractions." },
+      { t: "membrane", label: "On the edges, balancing between different worlds." },
+      { t: "loop",     label: "In dynamic, ever-changing spaces." }
     ]
   },
   {
-    q: "Choose a vibe:",
+    q: "What best describes your vibe?",
     opts: [
-      { t: "aromatic", label: "Deep, resonant, creative (aromatic ring energy)" },
-      { t: "small",    label: "Minimalist, agile (fits anywhere)" },
-      { t: "bulky",    label: "Commanding presence (big side chain)" },
-      { t: "rigid",    label: "Architectural—kinks/turns/constraints" }
+      { t: "aromatic", label: "Deep and creative, people feel my presence." },
+      { t: "small",    label: "Minimalist and adaptable, I fit in anywhere." },
+      { t: "bulky",    label: "Bold and commanding, I stand out in a crowd." },
+      { t: "rigid",    label: "Structured and precise, I bring order." }
     ]
   },
   {
-    q: "Conflict style?",
+    q: "When there’s conflict, how do you respond?",
     opts: [
-      { t: "basic", label: "Positively charged persuasion" },
-      { t: "acid",  label: "Sharpened critique (acidic clarity)" },
-      { t: "neutral",label: "Even-keeled mediation (uncharged polar)" },
-      { t: "hydroph",label: "Quiet endurance (nonpolar)" }
+      { t: "basic",   label: "With warmth and encouragement to keep things positive." },
+      { t: "acid",    label: "With sharp clarity that gets straight to the point." },
+      { t: "neutral", label: "With calm balance, keeping emotions in check." },
+      { t: "hydroph", label: "With quiet resilience, weathering the storm." }
     ]
   },
   {
-    q: "Special power?",
+    q: "What’s your hidden strength?",
     opts: [
-      { t: "sulfur",   label: "Disulfides/methyl transfers (sulfur craft)" },
-      { t: "aromatic", label: "π-stacking/fluorescent charisma" },
-      { t: "glycine",  label: "Micro-hinges & tight turns" },
-      { t: "proline",  label: "Helix breaker / structural elbow" }
+      { t: "sulfur",   label: "I can create rare, lasting connections that hold everything together." },
+      { t: "aromatic", label: "I have a presence that fills the room and draws people in." },
+      { t: "glycine",  label: "I’m adaptable and can squeeze into any role when needed." },
+      { t: "proline",  label: "I bring structure — I stop things from getting too loose or chaotic." }
     ]
   },
   {
-    q: "Pick your scale:",
+    q: "What “size” of role do you gravitate toward?",
     opts: [
-      { t: "tiny",  label: "Feather-light" },
-      { t: "small", label: "Compact" },
-      { t: "medium",label: "Balanced" },
-      { t: "large", label: "Substantial" }
+      { t: "tiny",   label: "Light and flexible — easy to shift around." },
+      { t: "small",  label: "Compact and efficient — I don’t need much space." },
+      { t: "medium", label: "Balanced — I adapt to what’s needed." },
+      { t: "large",  label: "Substantial — I like making a strong impression." }
     ]
   },
   {
-    q: "Preferred interaction type:",
+    q: "How do you tend to connect with others?",
     opts: [
-      { t: "hbond",   label: "Hydrogen bonds" },
-      { t: "salt",    label: "Salt bridges" },
-      { t: "pi",      label: "π interactions" },
-      { t: "vdw",     label: "Van der Waals pack" }
+      { t: "hbond", label: "With gentle, thoughtful bonds that make people feel supported." },
+      { t: "salt",  label: "With strong, dynamic energy that balances push and pull." },
+      { t: "pi",    label: "With deep resonance, like we’re vibing on the same wavelength." },
+      { t: "vdw",   label: "With quiet, steady reliability in the background." }
     ]
   },
   {
     q: "How experimental are you?",
     opts: [
-      { t: "special", label: "Rule-bending innovator" },
-      { t: "polar",   label: "Adaptive collaborator" },
-      { t: "hydroph", label: "Reliable traditionalist" },
-      { t: "aromatic",label: "Expressive visionary" }
+      { t: "special", label: "I like breaking rules and doing things differently." },
+      { t: "polar",   label: "I adjust quickly to whatever’s happening around me." },
+      { t: "hydroph", label: "I stick to reliable, proven ways of doing things." },
+      { t: "aromatic",label: "I bring passion and creativity that keeps things exciting." }
     ]
   },
   {
-    q: "Pick a metaphor:",
+    q: "Which metaphor feels most like you?",
     opts: [
-      { t: "starter", label: "Start codon energy (kickoff magnet)" },
-      { t: "sensor",  label: "Chemical switch (pKa-sensitive)" },
-      { t: "bridge",  label: "Cross-linker (disulfide bridges)" },
-      { t: "anchor",  label: "Hydrophobic anchor" }
+      { t: "starter", label: "A spark that gets things started." },
+      { t: "sensor",  label: "A sensitive switch that can change everything with small shifts." },
+      { t: "bridge",  label: "A bridge that links people or ideas." },
+      { t: "anchor",  label: "An anchor that keeps things steady." }
     ]
   },
   {
-    q: "Where do you shine?",
+    q: "Where do you shine the most?",
     opts: [
-      { t: "enzyme",  label: "Catalytic/active-site adjacent" },
-      { t: "binding", label: "Binding interfaces & recognition" },
-      { t: "scaffold",label: "Folding core/scaffolding" },
-      { t: "motif",   label: "Turns/loops/motifs" }
+      { t: "enzyme",  label: "At the heart of the action, making things happen." },
+      { t: "binding", label: "At the interface, helping different sides connect." },
+      { t: "scaffold",label: "Behind the scenes, keeping everything stable." },
+      { t: "motif",   label: "In creative patterns that make life interesting." }
     ]
   }
 ];
 
 // ---------------------- Amino Acid Property Map ----------------------
-// Tags roughly summarize biochemical tendencies (not exhaustive; tuned for fun + separation).
-// Each AA has: code, name, tags array, and a one-liner.
 const AAS = [
   {code:"A", name:"Alanine", tags:["hydroph","small","tiny","core","vdw","neutral","scaffold"], why:"Lean, stable, unflashy core builder."},
   {code:"R", name:"Arginine", tags:["charge+","basic","polar","surface","salt","sensor","medium"], why:"Talkative, surface-active, strong salt-bridger."},
@@ -195,11 +193,10 @@ function getVotes(){
     const picked = form.querySelector(`input[name="q${i}"]:checked`);
     if (picked) votes[picked.value] = (votes[picked.value]||0) + 1;
   }
-  return votes; // map tag -> count
+  return votes;
 }
 function scoreAA(aa, votes){
-  let s = 0;
-  let rareBonus = 0;
+  let s = 0, rareBonus = 0;
   aa.tags.forEach(tag=>{
     const v = votes[tag]||0;
     const w = TAG_WEIGHTS[tag]||1.0;
@@ -228,7 +225,7 @@ function burstConfetti(){
   for(let i=0;i<N;i++){
     const p = document.createElement("div");
     p.className = "p";
-    const x = Math.random()*100;  // vw
+    const x = Math.random()*100;
     const x2 = (x + (Math.random()*30-15));
     const dur = (8 + Math.random()*6).toFixed(2) + "s";
     const spd = (1 + Math.random()*1.5).toFixed(2) + "s";
@@ -242,33 +239,10 @@ function burstConfetti(){
     p.style.transform = `rotate(${Math.random()*360}deg)`;
     confettiRoot.appendChild(p);
   }
-  // remove after 6s
   setTimeout(()=> confettiRoot.classList.add("hidden"), 6000);
 }
 
-function renderResult(aa, votes){
-  aaBadge.textContent = aa.code;
-  aaTitle.textContent = `You are: ${aa.name}`;
-  aaMeta.textContent = prettyMeta(aa);
-  aaWhy.textContent = aa.why;
-
-  // Show top-matched tags
-  const weighted = Object.entries(votes)
-    .map(([t,c]) => ({t, sc:c*(TAG_WEIGHTS[t]||1)}))
-    .sort((a,b)=>b.sc-a.sc)
-    .slice(0,6);
-  aaTags.innerHTML = weighted.map(x=>`<span class="pill">${x.t} × ${Math.round(x.sc)}</span>`).join(" ");
-
-  resultEl.style.display = "block";
-  resultCard.classList.remove("pulse");
-  // trigger CSS pulse
-  void resultCard.offsetWidth; // reflow
-  resultCard.classList.add("pulse");
-  burstConfetti();
-}
-
 function prettyMeta(aa){
-  // compress a few iconic tags for display
   const icon = [];
   if (aa.tags.includes("aromatic")) icon.push("aromatic");
   if (aa.tags.includes("sulfur")) icon.push("sulfur");
@@ -282,22 +256,44 @@ function prettyMeta(aa){
   return icon.join(" · ");
 }
 
+function renderResult(aa, votes){
+  document.getElementById("aaBadge").textContent = aa.code;
+  document.getElementById("aaTitle").textContent = `You are: ${aa.name}`;
+  document.getElementById("aaMeta").textContent = prettyMeta(aa);
+  document.getElementById("aaWhy").textContent = aa.why;
+
+  // Top-matched tags (for the nerds who’ll ask why)
+  const weighted = Object.entries(votes)
+    .map(([t,c]) => ({t, sc:c*(TAG_WEIGHTS[t]||1)}))
+    .sort((a,b)=>b.sc-a.sc)
+    .slice(0,6);
+  document.getElementById("aaTags").innerHTML =
+    weighted.map(x=>`<span class="pill">${x.t} × ${Math.round(x.sc)}</span>`).join(" ");
+
+  resultEl.style.display = "block";
+  document.getElementById("resultCard").classList.remove("pulse"); void resultEl.offsetWidth;
+  document.getElementById("resultCard").classList.add("pulse");
+  burstConfetti();
+  window.scrollTo({top: resultEl.offsetTop - 12, behavior:"smooth"});
+}
+
 // ---------------------- Wire buttons ----------------------
 submitBtn.addEventListener("click", ()=>{
   const votes = getVotes();
   const {best} = pickBestAA(votes);
   renderResult(best, votes);
-  window.scrollTo({top: resultEl.offsetTop - 12, behavior:"smooth"});
 });
 
 resetBtn.addEventListener("click", ()=>{
   setTimeout(()=>{
     resultEl.style.display = "none";
-    aaBadge.textContent = "AA"; aaTitle.textContent = "You are: …";
-    aaMeta.textContent = "…"; aaWhy.textContent = "…"; aaTags.innerHTML = "";
-    confettiRoot.classList.add("hidden");
+    document.getElementById("aaBadge").textContent = "AA";
+    document.getElementById("aaTitle").textContent = "You are: …";
+    document.getElementById("aaMeta").textContent = "…";
+    document.getElementById("aaWhy").textContent = "…";
+    document.getElementById("aaTags").innerHTML = "";
+    document.getElementById("confetti").classList.add("hidden");
     updateProgress();
     window.scrollTo({top:0, behavior:"smooth"});
   }, 0);
 });
-
