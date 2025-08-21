@@ -1,135 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>What Amino Acid Are You? — Quiz</title>
+  <title>Which Amino Acid Are You?</title>
+  <link rel="preconnect" href="."/>
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; line-height: 1.5; margin: 24px; }
-    h1 { margin-bottom: 0; }
-    .sub { color: #555; margin-top: 4px; }
-    fieldset { border: 1px solid #ddd; padding: 16px; border-radius: 8px; margin-bottom: 16px; }
-    legend { font-weight: 600; }
-    .actions { margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-    button { padding: 10px 16px; border-radius: 8px; border: 1px solid #ccc; cursor: pointer; }
-    button[disabled] { opacity: 0.6; cursor: not-allowed; }
-    .result { margin-top: 24px; padding: 16px; border-radius: 8px; background: #fafafa; border: 1px solid #eee; display: none; }
-    .pill { display: inline-block; padding: 4px 10px; border-radius: 999px; border: 1px solid #ddd; margin-right: 8px; font-size: 12px; }
-    .muted { color: #666; }
-    .footer { margin-top: 24px; font-size: 12px; color: #666; }
-    .ok { color: #066e0a; font-weight: 600; }
-    .card { border: 1px solid #eee; border-radius: 10px; padding: 14px; margin-top: 12px; }
-    .progress { font-size: 14px; }
-    .noscript { padding: 12px; background:#fff3cd; border:1px solid #ffeeba; border-radius:8px; margin-top:12px; }
+    :root{
+      --bg:#0c1222; --card:#101935; --text:#e9ecf6; --muted:#9aa3c2;
+      --accent:#7aa2ff; --accent2:#77ffc0; --danger:#ff6b6b; --ok:#7dff95;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:radial-gradient(1200px 600px at 20% -10%, #1e2a52 0%, #0c1222 55%),
+               radial-gradient(800px 500px at 120% 10%, #18305b 0%, transparent 60%),
+               var(--bg);
+      color:var(--text); font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      min-height:100svh;
+    }
+    header{padding:32px 16px 0; text-align:center}
+    h1{margin:0 0 6px; letter-spacing:.3px}
+    .sub{color:var(--muted); margin:0 auto 18px; max-width:800px}
+    .container{max-width:900px; margin:0 auto; padding:16px}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px; padding:18px 18px 8px; box-shadow:0 10px 30px rgba(0,0,0,.35);
+      backdrop-filter: blur(6px);
+    }
+    fieldset{border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:16px; margin:12px 0}
+    legend{opacity:.9; font-weight:600}
+    label{display:block; padding:8px 12px; margin:6px 0; border:1px solid rgba(255,255,255,.08);
+      border-radius:10px; cursor:pointer; transition:.18s transform,.18s background,.18s border}
+    input[type=radio]{margin-right:8px; transform:translateY(1px)}
+    label:hover{transform:translateY(-1px); border-color:rgba(255,255,255,.18)}
+    .actions{display:flex; gap:12px; align-items:center; padding:12px 0 4px}
+    button{
+      border:1px solid rgba(255,255,255,.12); background:linear-gradient(180deg,#2c3e72,#1c2a55);
+      color:var(--text); padding:12px 18px; border-radius:12px; cursor:pointer; font-weight:600;
+      transition:.25s transform,.25s box-shadow; position:relative; isolation:isolate;
+    }
+    button[disabled]{opacity:.55; cursor:not-allowed; filter:saturate(.4)}
+    button:hover:not([disabled]){transform:translateY(-1px); box-shadow:0 10px 24px rgba(0,0,0,.35)}
+    .progress{color:var(--muted); font-size:14px}
+    .ok{color:var(--ok); font-weight:700}
+    .result{
+      margin-top:18px; display:none; opacity:0; transform:translateY(10px);
+      animation: reveal .6s ease forwards;
+    }
+    @keyframes reveal{to{opacity:1; transform:translateY(0)}}
+    .result-card{
+      display:grid; gap:10px; grid-template-columns: 100px 1fr;
+      align-items:start; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.10); border-radius:16px; padding:16px;
+    }
+    .badge{
+      background:linear-gradient(180deg, #273b78, #1a2a59);
+      border:1px solid rgba(255,255,255,.15); border-radius:14px; padding:8px 10px; font-variant:all-small-caps;
+      letter-spacing:.8px; text-align:center;
+    }
+    .score-line{display:flex; flex-wrap:wrap; gap:8px; color:var(--muted); font-size:14px}
+    .pill{border:1px solid rgba(255,255,255,.14); border-radius:999px; padding:4px 10px}
+    .meta{color:var(--muted); font-size:14px}
+    .hidden{display:none}
+    .foot{margin:12px 2px 10px; color:var(--muted); font-size:12px}
+    /* confetti */
+    .confetti{position:fixed; inset:0; pointer-events:none; overflow:hidden}
+    .confetti .p{
+      position:absolute; width:10px; height:16px; opacity:0; will-change:transform,opacity;
+      animation: fall var(--dur) linear forwards, spin var(--spd) linear infinite;
+    }
+    @keyframes fall{
+      0%{opacity:0; transform:translate(var(--x), -10vh) rotate(0deg)}
+      10%{opacity:1}
+      100%{opacity:0; transform:translate(var(--x2), 110vh) rotate(720deg)}
+    }
+    @keyframes spin{from{transform:rotate(0deg)} to{transform:rotate(360deg)}}
+    /* celebratory pulse */
+    .pulse{
+      animation: pulse 1s ease-in-out 2;
+    }
+    @keyframes pulse{
+      0%{box-shadow:0 0 0 0 rgba(122,162,255,.55)}
+      100%{box-shadow:0 0 0 24px rgba(122,162,255,0)}
+    }
   </style>
 </head>
 <body>
-  <h1>What Amino Acid Are You?</h1>
-  <p class="sub">Answer all 10 questions, then click the button.</p>
+  <header>
+    <h1>Which Amino Acid Are You?</h1>
+    <p class="sub">Answer 10 targeted questions. We’ll infer biochemical traits and pick a single best-match residue from the standard 20.</p>
+  </header>
 
-  <noscript><div class="noscript">JavaScript is disabled. Enable it to use the quiz.</div></noscript>
+  <div class="container">
+    <div class="card">
+      <form id="quizForm"></form>
 
-  <form id="quizForm">
-    <!-- 10 questions -->
-    <fieldset>
-      <legend>1) In a group project, what role do you naturally take?</legend>
-      <label><input type="radio" name="q1" value="A"> Leader who organizes everything</label><br/>
-      <label><input type="radio" name="q1" value="B"> Calm supporter who keeps everyone okay</label><br/>
-      <label><input type="radio" name="q1" value="C"> Quiet worker behind the scenes</label><br/>
-      <label><input type="radio" name="q1" value="D"> Quirky wildcard who surprises everyone</label>
-    </fieldset>
+      <div class="actions">
+        <button id="submitBtn" type="button" disabled>Reveal my amino acid</button>
+        <button id="resetBtn" type="reset">Reset</button>
+        <span id="progress" class="progress"><span>0 / 10 answered</span></span>
+      </div>
 
-    <fieldset>
-      <legend>2) How do you prefer to solve problems?</legend>
-      <label><input type="radio" name="q2" value="A"> Head-on with direct action</label><br/>
-      <label><input type="radio" name="q2" value="B"> Talk it through and collaborate</label><br/>
-      <label><input type="radio" name="q2" value="C"> Quiet, independent thinking</label><br/>
-      <label><input type="radio" name="q2" value="D"> Creative, outside-the-box approaches</label>
-    </fieldset>
-
-    <fieldset>
-      <legend>3) At a party, you’re most likely...</legend>
-      <label><input type="radio" name="q3" value="A"> Center of attention making connections</label><br/>
-      <label><input type="radio" name="q3" value="B"> Floating between groups and adapting</label><br/>
-      <label><input type="radio" name="q3" value="C"> With a few trusted friends</label><br/>
-      <label><input type="radio" name="q3" value="D"> Starting karaoke or something unexpected</label>
-    </fieldset>
-
-    <fieldset>
-      <legend>4) What kind of environment do you thrive in?</legend>
-      <label><input type="radio" name="q4" value="A"> High-energy, challenging spaces</label><br/>
-      <label><input type="radio" name="q4" value="B"> Warm, supportive, cooperative spaces</label><br/>
-      <label><input type="radio" name="q4" value="C"> Quiet, focused, predictable spaces</label><br/>
-      <label><input type="radio" name="q4" value="D"> Dynamic, experimental, changing spaces</label>
-    </fieldset>
-
-    <fieldset>
-      <legend>5) Which metaphor fits you best?</legend>
-      <label><input type="radio" name="q5" value="A"> Spark plug — igniting energy</label><br/>
-      <label><input type="radio" name="q5" value="B"> Glue stick — helping people connect</label><br/>
-      <label><input type="radio" name="q5" value="C"> Rock — solid and reliable</label><br/>
-      <label><input type="radio" name="q5" value="D"> Curveball — full of surprises</label>
-    </fieldset>
-
-    <fieldset>
-      <legend>6) How do you handle conflict?</legend>
-      <label><input type="radio" name="q6" value="A"> Confront it directly</label><br/>
-      <label><input type="radio" name="q6" value="B"> Mediate and calm things down</label><br/>
-      <label><input type="radio" name="q6" value="C"> Avoid it and stay steady</label><br/>
-      <label><input type="radio" name="q6" value="D"> Shift the perspective entirely</label>
-    </fieldset>
-
-    <fieldset>
-      <legend>7) What’s your hidden strength?</legend>
-      <label><input type="radio" name="q7" value="A"> Passion and drive</label><br/>
-      <label><input type="radio" name="q7" value="B"> Empathy and adaptability</label><br/>
-      <label><input type="radio" name="q7" value="C"> Reliability and loyalty</label><br/>
-      <label><input type="radio" name="q7" value="D"> Creativity and unpredictability</label>
-    </fieldset>
-
-    <fieldset>
-      <legend>8) How do you recharge?</legend>
-      <label><input type="radio" name="q8" value="A"> Competing or achieving something</label><br/>
-      <label><input type="radio" name="q8" value="B"> Connecting with people I care about</label><br/>
-      <label><input type="radio" name="q8" value="C"> Quiet alone time</label><br/>
-      <label><input type="radio" name="q8" value="D"> Trying something new and exciting</label>
-    </fieldset>
-
-    <fieldset>
-      <legend>9) Which element matches your vibe?</legend>
-      <label><input type="radio" name="q9" value="A"> Fire — intense, energetic</label><br/>
-      <label><input type="radio" name="q9" value="B"> Water — flowing, connecting</label><br/>
-      <label><input type="radio" name="q9" value="C"> Earth — grounded, stable</label><br/>
-      <label><input type="radio" name="q9" value="D"> Air — unpredictable, dynamic</label>
-    </fieldset>
-
-    <fieldset>
-      <legend>10) If your life were a protein, you’d be the...</legend>
-      <label><input type="radio" name="q10" value="A"> Active site doing the chemistry</label><br/>
-      <label><input type="radio" name="q10" value="B"> Flexible loop enabling interactions</label><br/>
-      <label><input type="radio" name="q10" value="C"> Structural core keeping things stable</label><br/>
-      <label><input type="radio" name="q10" value="D"> Hinge making big conformational changes</label>
-    </fieldset>
-
-    <div class="actions">
-      <button type="button" id="submitBtn" disabled>Get My Amino Acid</button>
-      <button type="reset" id="resetBtn">Reset</button>
-      <span class="progress" id="progress"><span class="muted">0 / 10 answered</span></span>
+      <div id="result" class="result">
+        <div class="result-card" id="resultCard">
+          <div class="badge" id="aaBadge">AA</div>
+          <div>
+            <h2 id="aaTitle" style="margin:0 0 4px">You are: …</h2>
+            <div class="meta" id="aaMeta">…</div>
+            <p id="aaWhy" style="margin:10px 0 8px">…</p>
+            <div class="score-line" id="aaTags"></div>
+          </div>
+        </div>
+        <p class="foot">Fun fact: traits are mapped to polarity, charge, size, aromaticity, sulfur, flexibility, and special structural roles. Tie-breakers prefer rarer features.</p>
+      </div>
     </div>
-  </form>
-
-  <div class="result" id="result">
-    <div id="resultBanner"></div>
-    <div id="resultDetails" class="card"></div>
-    <p class="muted" id="resultNote"></p>
   </div>
 
-  <p class="footer">This quiz is for fun and loosely maps personality traits to biochemical properties:
-    <span class="pill">A = Charged</span>
-    <span class="pill">B = Polar (uncharged)</span>
-    <span class="pill">C = Hydrophobic</span>
-    <span class="pill">D = Special cases (Proline, Glycine, Cys)</span>
-  </p>
+  <div id="confetti" class="confetti hidden" aria-hidden="true"></div>
 
   <script src="quiz.js" defer></script>
 </body>
