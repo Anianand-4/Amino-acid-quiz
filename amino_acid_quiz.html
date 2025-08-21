@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>What Amino Acid Are You? — Quiz</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; line-height: 1.5; margin: 24px; }
+    h1 { margin-bottom: 0; }
+    .sub { color: #555; margin-top: 4px; }
+    fieldset { border: 1px solid #ddd; padding: 16px; border-radius: 8px; margin-bottom: 16px; }
+    legend { font-weight: 600; }
+    .actions { margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    button { padding: 10px 16px; border-radius: 8px; border: 1px solid #ccc; cursor: pointer; }
+    button[disabled] { opacity: 0.6; cursor: not-allowed; }
+    .result { margin-top: 24px; padding: 16px; border-radius: 8px; background: #fafafa; border: 1px solid #eee; display: none; }
+    .pill { display: inline-block; padding: 4px 10px; border-radius: 999px; border: 1px solid #ddd; margin-right: 8px; font-size: 12px; }
+    .muted { color: #666; }
+    .footer { margin-top: 24px; font-size: 12px; color: #666; }
+    .ok { color: #066e0a; font-weight: 600; }
+    .card { border: 1px solid #eee; border-radius: 10px; padding: 14px; margin-top: 12px; }
+    .progress { font-size: 14px; }
+    .noscript { padding: 12px; background:#fff3cd; border:1px solid #ffeeba; border-radius:8px; margin-top:12px; }
+  </style>
+</head>
+<body>
+  <h1>What Amino Acid Are You?</h1>
+  <p class="sub">Answer all 10 questions, then click the button.</p>
+
+  <noscript><div class="noscript">JavaScript is disabled. Enable it to use the quiz.</div></noscript>
+
+  <form id="quizForm">
+    <!-- 10 questions -->
+    <fieldset>
+      <legend>1) In a group project, what role do you naturally take?</legend>
+      <label><input type="radio" name="q1" value="A"> Leader who organizes everything</label><br/>
+      <label><input type="radio" name="q1" value="B"> Calm supporter who keeps everyone okay</label><br/>
+      <label><input type="radio" name="q1" value="C"> Quiet worker behind the scenes</label><br/>
+      <label><input type="radio" name="q1" value="D"> Quirky wildcard who surprises everyone</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>2) How do you prefer to solve problems?</legend>
+      <label><input type="radio" name="q2" value="A"> Head-on with direct action</label><br/>
+      <label><input type="radio" name="q2" value="B"> Talk it through and collaborate</label><br/>
+      <label><input type="radio" name="q2" value="C"> Quiet, independent thinking</label><br/>
+      <label><input type="radio" name="q2" value="D"> Creative, outside-the-box approaches</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>3) At a party, you’re most likely...</legend>
+      <label><input type="radio" name="q3" value="A"> Center of attention making connections</label><br/>
+      <label><input type="radio" name="q3" value="B"> Floating between groups and adapting</label><br/>
+      <label><input type="radio" name="q3" value="C"> With a few trusted friends</label><br/>
+      <label><input type="radio" name="q3" value="D"> Starting karaoke or something unexpected</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>4) What kind of environment do you thrive in?</legend>
+      <label><input type="radio" name="q4" value="A"> High-energy, challenging spaces</label><br/>
+      <label><input type="radio" name="q4" value="B"> Warm, supportive, cooperative spaces</label><br/>
+      <label><input type="radio" name="q4" value="C"> Quiet, focused, predictable spaces</label><br/>
+      <label><input type="radio" name="q4" value="D"> Dynamic, experimental, changing spaces</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>5) Which metaphor fits you best?</legend>
+      <label><input type="radio" name="q5" value="A"> Spark plug — igniting energy</label><br/>
+      <label><input type="radio" name="q5" value="B"> Glue stick — helping people connect</label><br/>
+      <label><input type="radio" name="q5" value="C"> Rock — solid and reliable</label><br/>
+      <label><input type="radio" name="q5" value="D"> Curveball — full of surprises</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>6) How do you handle conflict?</legend>
+      <label><input type="radio" name="q6" value="A"> Confront it directly</label><br/>
+      <label><input type="radio" name="q6" value="B"> Mediate and calm things down</label><br/>
+      <label><input type="radio" name="q6" value="C"> Avoid it and stay steady</label><br/>
+      <label><input type="radio" name="q6" value="D"> Shift the perspective entirely</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>7) What’s your hidden strength?</legend>
+      <label><input type="radio" name="q7" value="A"> Passion and drive</label><br/>
+      <label><input type="radio" name="q7" value="B"> Empathy and adaptability</label><br/>
+      <label><input type="radio" name="q7" value="C"> Reliability and loyalty</label><br/>
+      <label><input type="radio" name="q7" value="D"> Creativity and unpredictability</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>8) How do you recharge?</legend>
+      <label><input type="radio" name="q8" value="A"> Competing or achieving something</label><br/>
+      <label><input type="radio" name="q8" value="B"> Connecting with people I care about</label><br/>
+      <label><input type="radio" name="q8" value="C"> Quiet alone time</label><br/>
+      <label><input type="radio" name="q8" value="D"> Trying something new and exciting</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>9) Which element matches your vibe?</legend>
+      <label><input type="radio" name="q9" value="A"> Fire — intense, energetic</label><br/>
+      <label><input type="radio" name="q9" value="B"> Water — flowing, connecting</label><br/>
+      <label><input type="radio" name="q9" value="C"> Earth — grounded, stable</label><br/>
+      <label><input type="radio" name="q9" value="D"> Air — unpredictable, dynamic</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>10) If your life were a protein, you’d be the...</legend>
+      <label><input type="radio" name="q10" value="A"> Active site doing the chemistry</label><br/>
+      <label><input type="radio" name="q10" value="B"> Flexible loop enabling interactions</label><br/>
+      <label><input type="radio" name="q10" value="C"> Structural core keeping things stable</label><br/>
+      <label><input type="radio" name="q10" value="D"> Hinge making big conformational changes</label>
+    </fieldset>
+
+    <div class="actions">
+      <button type="button" id="submitBtn" disabled>Get My Amino Acid</button>
+      <button type="reset" id="resetBtn">Reset</button>
+      <span class="progress" id="progress"><span class="muted">0 / 10 answered</span></span>
+    </div>
+  </form>
+
+  <div class="result" id="result">
+    <div id="resultBanner"></div>
+    <div id="resultDetails" class="card"></div>
+    <p class="muted" id="resultNote"></p>
+  </div>
+
+  <p class="footer">This quiz is for fun and loosely maps personality traits to biochemical properties:
+    <span class="pill">A = Charged</span>
+    <span class="pill">B = Polar (uncharged)</span>
+    <span class="pill">C = Hydrophobic</span>
+    <span class="pill">D = Special cases (Proline, Glycine, Cys)</span>
+  </p>
+
+  <script src="quiz.js" defer></script>
+</body>
+</html>
